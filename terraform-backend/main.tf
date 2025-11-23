@@ -1,4 +1,13 @@
 terraform {
+	/* this is done after the local state creation to bring the local state to the remote state for better 
+	state management and collaboration */
+	backend "s3" {
+		bucket = "terraform-state-bucket-shyaminda"
+		key = "terraform-playground/terraform-backend/terraform.tfstate"
+		region = "us-east-1"
+		dynamodb_table = "terraform-state-locking"
+		encrypt = true
+	}
 	required_providers {
 		aws = {
 			source = "hashicorp/aws"
@@ -48,3 +57,5 @@ resource "aws_dynamodb_table" "terraform_locks" {
 }
 
 //this will create 3 resources: S3 bucket, versioning for the bucket, DynamoDB table for state locking
+/*after making the state remote the state file is saved inside the s3 bucket and dynamodb
+store a tiny lock record so no one else can run apply at the same time */
