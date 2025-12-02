@@ -23,7 +23,7 @@ provider "aws" {
 we can use any name for "terraform_state" */
 resource "aws_s3_bucket" "terraform_state" {
 	bucket = "terraform-state-bucket-shyaminda"  // Change this to a unique bucket name
-	force_destroy = true
+	force_destroy = false
 }
 
 /* Enables versioning on the bucket. 

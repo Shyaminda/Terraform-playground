@@ -1,7 +1,7 @@
 terraform {
 	backend "s3" {
 		bucket = "terraform-state-bucket-shyaminda"
-		key = "terraform-playground/terraform-backend/terraform.tfstate"
+		key = "terraform-playground/terraform-web-app/terraform.tfstate"
 		region = "us-east-1"
 		dynamodb_table = "terraform-state-locking"
 		encrypt = true
@@ -85,12 +85,15 @@ data "aws_vpc" "default_vpc" {
 	default = true
 }
 
-/* The aws_subnet_ids data source in Terraform is used to retrieve a 
+/* The aws_subnet data source in Terraform is used to retrieve a 
 set of subnet IDs for a specific VPC based on applied filters. 
 This allows other Terraform resources to dynamically reference existing 
 subnets without needing their explicit IDs hardcoded in the configuration */
-data "aws_subnet_ids" "default_subnet" {
-	vpc_id = data.aws_vpc.default_vpc.id
+data "aws_subnets" "default_subnets" {
+	filter {
+		name   = "vpc-id"
+		values = [data.aws_vpc.default_vpc.id]
+	}
 }
 
 /* Defines a security group without rules */
@@ -201,7 +204,7 @@ resource "aws_security_group_rule" "allow_alb_http_outbound" {
 resource "aws_lb" "load_balancer" {
 	name = "web-app-load-balancer"
 	load_balancer_type = "application"
-	subnets = data.aws_subnet_ids.default_subnet.ids
+	subnets = data.aws_subnets.default_subnets.ids
 	security_groups = [aws_security_group.alb_security_group.id]
 }
 
@@ -228,7 +231,7 @@ resource "aws_db_instance" "db_instance" {
 	engine = "postgres"
 	engine_version = "12.7"
 	instance_class = "db.t2.micro"
-	identifier = "myPostDB"
+	identifier = "mypostdbinstance"
 	username = "postgresAdmin"
 	password = "Postgres@123"
 	skip_final_snapshot = true  //this means no snapshot will be taken when the db is deleted
