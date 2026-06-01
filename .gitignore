@@ -14,3 +14,7 @@ errored.tfstate
 
 # Sensitive crash logs
 crash.log
+
+teffaform.tfvars
+*.tfvars.json
+
