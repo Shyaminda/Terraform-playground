@@ -10,3 +10,11 @@ resource "aws_s3_public_access_block" "public_access_block" {
 	ignore_public_acls      = true
 	restrict_public_buckets = true
 }
+
+resource "aws_cloudfront_origin_access_control" "oac" {
+  name                              = "demo-oac"
+  description                       = "demo Policy"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
