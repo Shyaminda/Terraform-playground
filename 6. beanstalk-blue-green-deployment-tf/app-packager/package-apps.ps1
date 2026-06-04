@@ -36,3 +36,8 @@ Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host "1. Run: terraform init" -ForegroundColor White
 Write-Host "2. Run: terraform plan" -ForegroundColor White
 Write-Host "3. Run: terraform apply" -ForegroundColor White
+
+
+# windows execution error
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+# .\package-apps.ps1

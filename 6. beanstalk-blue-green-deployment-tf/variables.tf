@@ -19,3 +19,15 @@ variable "tag" {
     managedBy = "terraform"
   }
 }
+
+variable "solution_stack_name" {
+  description = "The Elastic Beanstalk solution stack to use for the environment"
+  type        = string
+  default     = "64bit Amazon Linux 2023 v6.6.8 running Node.js 20"
+}
+
+variable "instance_type" {
+  description = "The EC2 instance type for the Elastic Beanstalk environment"
+  type        = string
+  default     = "t2.micro"
+}
