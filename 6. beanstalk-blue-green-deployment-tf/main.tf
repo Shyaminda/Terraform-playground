@@ -66,3 +66,37 @@ resource "aws_iam_role" "eb_service_role" {
   tags = var.tag
 }
 
+# Attach Enhanced Health Reporting policy
+resource "aws_iam_role_policy_attachment" "eb_service_health" {
+  role       = aws_iam_role.eb_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
+}
+
+# Attach Managed Updates policy
+resource "aws_iam_role_policy_attachment" "eb_service_managed_updates" {
+  role       = aws_iam_role.eb_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
+}
+
+# Elastic Beanstalk Application
+resource "aws_elastic_beanstalk_application" "app" {
+  name        = var.app_name
+  description = "Elastic Beanstalk application for blue-green deployment demo"
+  tags        = var.tag
+}
+
+# S3 Bucket for application versions
+resource "aws_s3_bucket" "app_versions" {
+  bucket = "${var.app_name}-versions-${data.aws_caller_identity.current.account_id}"
+  tags   = var.tag
+}
+
+# Block public access to S3 bucket
+resource "aws_s3_bucket_public_access_block" "app_versions" {
+  bucket = aws_s3_bucket.app_versions.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
