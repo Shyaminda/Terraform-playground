@@ -151,3 +151,91 @@ resource "aws_route" "secondary_to_primary" {
 
   depends_on = [aws_vpc_peering_connection_accepter.secondary_accepter]
 }
+
+resource "aws_security_group" "primary_sg" {
+	provider = aws.primary
+	name = "primary-vpc-sg"
+	description = "Security group for primary VPC"
+	vpc_id = aws_vpc.primary_vpc.id
+
+	ingress {
+		description = "Allow SSH from anywhere"
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	ingress {
+		description = "ICMP from secondary VPC"
+		from_port = -1
+		to_port = -1
+		protocol = "icmp" //ping
+		cidr_blocks = [var.secondary_vpc_cidr]
+	}
+
+	ingress {
+		description = "Allow all traffic from secondary VPC"
+		from_port = 0
+		to_port = 65535
+		protocol = "tcp"
+		cidr_blocks = [var.secondary_vpc_cidr]
+	}
+
+	egress {
+		description = "Allow all outbound traffic"
+		from_port = 0
+		to_port = 0
+		protocol = "-1" //all protocols
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	tags = {
+		Name = "primary-vpc-sg"
+		Environment = "dev"
+	}
+}
+
+resource "aws_security_group" "secondary_sg" {
+	provider = aws.secondary
+	name = "secondary-vpc-sg"
+	description = "Security group for secondary VPC"
+	vpc_id = aws_vpc.secondary_vpc.id
+
+	ingress {
+		description = "Allow SSH from anywhere"
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	ingress {
+		description = "ICMP from primary VPC"
+		from_port = -1
+		to_port = -1
+		protocol = "icmp" //ping
+		cidr_blocks = [var.primary_vpc_cidr]
+	}
+
+	ingress {
+		description = "Allow all traffic from primary VPC"
+		from_port = 0
+		to_port = 65535
+		protocol = "tcp"
+		cidr_blocks = [var.primary_vpc_cidr]
+	}
+
+	egress {
+		description = "Allow all outbound traffic"
+		from_port = 0
+		to_port = 0
+		protocol = "-1" //all protocols
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+
+	tags = {
+		Name = "secondary-vpc-sg"
+		Environment = "dev"
+	}
+}
