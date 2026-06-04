@@ -65,3 +65,33 @@ resource "aws_internet_gateway" "secondary_igw" {
 		Environment = "dev"
 	}
 }
+
+resource "aws_route_table" "primary_rt" {
+	provider = aws.primary
+	vpc_id = aws_vpc.primary_vpc.id
+
+	route {
+		cidr_block = "0.0.0.0/0"
+		gateway_id = aws_internet_gateway.primary_igw.id
+	}
+
+	tags = {
+		Name = "primary-rt"
+		Environment = "dev"
+	}
+}
+
+resource "aws_route_table" "secondary_rt" {
+	provider = aws.secondary
+	vpc_id = aws_vpc.secondary_vpc.id
+
+	route {
+		cidr_block = "0.0.0.0/0"
+		gateway_id = aws_internet_gateway.secondary_igw.id
+	}
+
+	tags = {
+		Name = "secondary-rt"
+		Environment = "dev"
+	}
+}
