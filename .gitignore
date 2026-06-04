@@ -18,3 +18,5 @@ crash.log
 teffaform.tfvars
 *.tfvars.json
 
+*.pem
+*.key
