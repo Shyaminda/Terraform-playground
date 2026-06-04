@@ -15,7 +15,7 @@ variable "tag" {
   type        = map(string)
   default     = {
     project = "beanstalk-blue-green-deployment"
-    environment = ""
+    environment = "dev"
     managedBy = "terraform"
   }
 }
@@ -23,7 +23,7 @@ variable "tag" {
 variable "solution_stack_name" {
   description = "The Elastic Beanstalk solution stack to use for the environment"
   type        = string
-  default     = "64bit Amazon Linux 2023 v6.6.8 running Node.js 20"
+  default     = ""
 }
 
 variable "instance_type" {

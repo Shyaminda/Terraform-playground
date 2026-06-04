@@ -72,12 +72,6 @@ resource "aws_iam_role_policy_attachment" "eb_service_health" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
-# Attach Managed Updates policy
-resource "aws_iam_role_policy_attachment" "eb_service_managed_updates" {
-  role       = aws_iam_role.eb_service_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
-}
-
 # Elastic Beanstalk Application
 resource "aws_elastic_beanstalk_application" "app" {
   name        = var.app_name
