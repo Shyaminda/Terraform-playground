@@ -122,17 +122,32 @@ resource "aws_vpc_peering_connection" "primary_to_secondary" {
   }
 }
 
-resource "aws_vpc_peering_connection" "secondary_to_primary" {
-  provider    = aws.secondary
-  vpc_id      = aws_vpc.secondary_vpc.id
-  peer_vpc_id = aws_vpc.primary_vpc.id
-  peer_region = var.primary_region
-  auto_accept = false
+resource "aws_vpc_peering_connection_accepter" "secondary_accepter" {
+  provider                  = aws.secondary
+  vpc_peering_connection_id = aws_vpc_peering_connection.primary_to_secondary.id
+  auto_accept               = true
 
   tags = {
-    Name        = "secondary-to-primary-peering"
+    Name        = "secondary-peering-accepter"
     Environment = "dev"
     side        = "accepter"
   }
 }
 
+resource "aws_route" "primary_to_secondary" {
+  provider                  = aws.primary
+  route_table_id            = aws_route_table.primary_rt.id
+  destination_cidr_block    = var.secondary_vpc_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.primary_to_secondary.id
+
+  depends_on = [aws_vpc_peering_connection_accepter.secondary_accepter]
+}
+
+resource "aws_route" "secondary_to_primary" {
+  provider                  = aws.secondary
+  route_table_id            = aws_route_table.secondary_rt.id
+  destination_cidr_block    = var.primary_vpc_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.primary_to_secondary.id
+
+  depends_on = [aws_vpc_peering_connection_accepter.secondary_accepter]
+}
