@@ -7,7 +7,7 @@ Write-Host ""
 
 # Package Version 1.0 (Blue)
 Write-Host "Packaging Application v1.0 (Blue)..." -ForegroundColor Yellow
-Push-Location app-v1
+Push-Location ../app-v1
 if (Test-Path "app-v1.zip") {
     Remove-Item "app-v1.zip" -Force
 }
@@ -19,7 +19,7 @@ Write-Host ""
 
 # Package Version 2.0 (Green)
 Write-Host "Packaging Application v2.0 (Green)..." -ForegroundColor Yellow
-Push-Location app-v2
+Push-Location ../app-v2
 if (Test-Path "app-v2.zip") {
     Remove-Item "app-v2.zip" -Force
 }
