@@ -45,3 +45,23 @@ resource "aws_subnet" "secondary_subnet" {
     Environment = "dev"
   }
 }
+
+resource "aws_internet_gateway" "primary_igw" {
+	provider = aws.primary
+	vpc_id = aws_vpc.primary_vpc.id
+
+	tags = {
+		Name = "primary-igw-${var.primary_region}"
+		Environment = "dev"
+	}
+}
+
+resource "aws_internet_gateway" "secondary_igw" {
+	provider = aws.secondary
+	vpc_id = aws_vpc.secondary_vpc.id
+
+	tags = {
+		Name = "secondary-igw-${var.secondary_region}"
+		Environment = "dev"
+	}
+}
