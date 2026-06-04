@@ -13,7 +13,7 @@ resource "aws_elastic_beanstalk_application_version" "v2" {
   application = aws_elastic_beanstalk_application.app.name
   description = "Application Version 2.0 - New Feature Release"
   bucket      = aws_s3_bucket.app_versions.id
-  key         = aws_s3_object.app_v2.id
+  key         = aws_s3_object.app_v2.key
 
   tags = var.tag
 }
@@ -22,7 +22,7 @@ resource "aws_elastic_beanstalk_application_version" "v2" {
 resource "aws_elastic_beanstalk_environment" "green" {
   name                = "${var.app_name}-green"
   application         = aws_elastic_beanstalk_application.app.name
-  solution_stack_name = var.solution_stack_name
+  solution_stack_name = data.aws_elastic_beanstalk_solution_stack.nodejs.name
   tier                = "WebServer"
   version_label       = aws_elastic_beanstalk_application_version.v2.name
 
