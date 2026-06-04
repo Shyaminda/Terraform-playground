@@ -1,13 +1,13 @@
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
   type        = string
-  default     = "us-east-1"
+  default     = ""
 }
 
 variable "app_name" {
   description = "The name of the Elastic Beanstalk application"
   type        = string
-  default     = "my-beanstalk-app"
+  default     = ""
 }
 
 variable "tag" {
@@ -15,7 +15,7 @@ variable "tag" {
   type        = map(string)
   default     = {
     project = "beanstalk-blue-green-deployment"
-    environment = "dev"
+    environment = ""
     managedBy = "terraform"
   }
 }
@@ -29,5 +29,5 @@ variable "solution_stack_name" {
 variable "instance_type" {
   description = "The EC2 instance type for the Elastic Beanstalk environment"
   type        = string
-  default     = "t2.micro"
+  default     = ""
 }
