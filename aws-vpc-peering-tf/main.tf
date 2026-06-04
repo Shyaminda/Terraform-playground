@@ -118,6 +118,7 @@ resource "aws_vpc_peering_connection" "primary_to_secondary" {
   tags = {
     Name        = "primary-to-secondary-peering"
     Environment = "dev"
+    side        = "requester"
   }
 }
 
@@ -131,5 +132,7 @@ resource "aws_vpc_peering_connection" "secondary_to_primary" {
   tags = {
     Name        = "secondary-to-primary-peering"
     Environment = "dev"
+    side        = "accepter"
   }
 }
+
